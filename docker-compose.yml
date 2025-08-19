@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  krx-api-explorer:
+    build: .
+    container_name: krx-api-explorer
+    environment:
+      - KRX_API_KEY=${KRX_API_KEY:-}
+      - KRX_API_BASE_URL=${KRX_API_BASE_URL:-https://data-api.krx.co.kr}
+      - JAVA_OPTS=-Xms512m -Xmx1024m
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/explore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - krx-network
+
+networks:
+  krx-network:
+    driver: bridge

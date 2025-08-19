@@ -1,0 +1,102 @@
+spring:
+  application:
+    name: krx-api-explorer
+  
+  main:
+    web-application-type: reactive
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+krx:
+  api:
+    base-url: ${KRX_API_BASE_URL:https://data-api.krx.co.kr}
+    key: ${KRX_API_KEY:}
+    timeout: 30s
+    default-format: json
+    
+  apis:
+    index:
+      - id: "krx_dd_trd"
+        name: "KRX 시리즈 일별시세정보"
+        category: "index"
+      - id: "kospi_dd_trd"
+        name: "KOSPI 시리즈 일별시세정보"
+        category: "index"
+      - id: "kosdaq_dd_trd"
+        name: "KOSDAQ 시리즈 일별시세정보"
+        category: "index"
+      - id: "bon_dd_trd"
+        name: "채권지수 시세정보"
+        category: "index"
+      - id: "drvprod_dd_trd"
+        name: "파생상품지수 시세정보"
+        category: "index"
+    
+    stock:
+      - id: "stk_bydd_trd"
+        name: "유가증권 일별매매정보"
+        category: "stock"
+      - id: "ksq_bydd_trd"
+        name: "코스닥 일별매매정보"
+        category: "stock"
+      - id: "knx_bydd_trd"
+        name: "코넥스 일별매매정보"
+        category: "stock"
+      - id: "sw_bydd_trd"
+        name: "신주인수권증권 일별매매정보"
+        category: "stock"
+      - id: "sr_bydd_trd"
+        name: "신주인수권증서 일별매매정보"
+        category: "stock"
+      - id: "stk_isu_base_info"
+        name: "유가증권 종목기본정보"
+        category: "stock"
+      - id: "ksq_isu_base_info"
+        name: "코스닥 종목기본정보"
+        category: "stock"
+      - id: "knx_isu_base_info"
+        name: "코넥스 종목기본정보"
+        category: "stock"
+    
+    securities:
+      - id: "etf_bydd_trd"
+        name: "ETF 일별매매정보"
+        category: "securities"
+      - id: "etn_bydd_trd"
+        name: "ETN 일별매매정보"
+        category: "securities"
+      - id: "elw_bydd_trd"
+        name: "ELW 일별매매정보"
+        category: "securities"
+    
+    bond:
+      - id: "kts_bydd_trd"
+        name: "국채전문유통시장 일별매매정보"
+        category: "bond"
+      - id: "bnd_bydd_trd"
+        name: "일반채권시장 일별매매정보"
+        category: "bond"
+      - id: "smb_bydd_trd"
+        name: "소액채권시장 일별매매정보"
+        category: "bond"
+
+logging:
+  level:
+    com.trading.explorer: DEBUG
+    reactor.netty.http.client: DEBUG
+  file:
+    path: ./logs
+    name: ./logs/krx-api-explorer.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
+    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n"
