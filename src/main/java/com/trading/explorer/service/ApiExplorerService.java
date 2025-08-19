@@ -40,7 +40,8 @@ public class ApiExplorerService {
                     return krxApiClient.callApiWithDefaultDate(api.getId())
                             .map(response -> Map.entry(api.getId(), createApiResult(api, response)))
                             .doOnNext(entry -> {
-                                if (entry.getValue() instanceof Map<?, ?> result) {
+                                if (entry.getValue() instanceof Map<?, ?>) {
+                                    Map<?, ?> result = (Map<?, ?>) entry.getValue();
                                     log.info("API {} exploration completed: success={}", 
                                             entry.getKey(), result.get("success"));
                                 }
@@ -51,7 +52,8 @@ public class ApiExplorerService {
                     Map<String, Object> summary = new HashMap<>();
                     summary.put("totalApis", allApis.size());
                     summary.put("results", results);
-                    summary.put("summary", createSummary(results));
+                    Map<String, Object> resultsForSummary = new HashMap<>(results);
+                    summary.put("summary", createSummary(resultsForSummary));
                     
                     log.info("All APIs exploration completed. Total: {}", allApis.size());
                     return summary;
@@ -83,7 +85,8 @@ public class ApiExplorerService {
                     categoryResult.put("category", category);
                     categoryResult.put("totalApis", categoryApis.size());
                     categoryResult.put("results", results);
-                    categoryResult.put("summary", createSummary(results));
+                    Map<String, Object> resultsForSummary = new HashMap<>(results);
+                    categoryResult.put("summary", createSummary(resultsForSummary));
                     
                     log.info("Category {} exploration completed. APIs: {}", category, categoryApis.size());
                     return categoryResult;
@@ -136,7 +139,8 @@ public class ApiExplorerService {
     private Map<String, Object> createSummary(Map<String, Object> results) {
         long successCount = results.values().stream()
                 .mapToLong(result -> {
-                    if (result instanceof Map<?, ?> map) {
+                    if (result instanceof Map<?, ?>) {
+                        Map<?, ?> map = (Map<?, ?>) result;
                         return Boolean.TRUE.equals(map.get("success")) ? 1L : 0L;
                     }
                     return 0L;
